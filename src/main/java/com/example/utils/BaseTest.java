@@ -1,7 +1,8 @@
 package com.example.utils;
 
-import com.example.page.CraigslistMainPage;
+import com.example.page.PopupDemoPage;
 import io.github.bonigarcia.wdm.WebDriverManager;
+import org.openqa.selenium.UnexpectedAlertBehaviour;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -12,7 +13,7 @@ import java.util.Collections;
 
 public abstract class BaseTest {
     protected static WebDriver driver;
-    protected CraigslistMainPage welcomePage;
+    protected PopupDemoPage welcomePage;
 
     @BeforeMethod
     public void preCondition() {
@@ -21,14 +22,15 @@ public abstract class BaseTest {
 
         driver = new ChromeDriver(chromeOptions);
         driver.manage().window().maximize();
-        driver.get("https://miami.craigslist.org/");
-
-        welcomePage = new CraigslistMainPage(driver);
+        String url = "file://" + System.getProperty("user.dir") + "/test.html";
+        driver.get(url);
+        welcomePage = new PopupDemoPage(driver);
     }
 
     private ChromeOptions getChromeOptions() {
         ChromeOptions optionsChrome = new ChromeOptions();
         optionsChrome.addArguments("start-maximized");
+        optionsChrome.setUnhandledPromptBehaviour(UnexpectedAlertBehaviour.IGNORE);
         optionsChrome.setCapability("chrome.switches",
                 Collections.singletonList("--ignore-certificate-errors,--web-security=false,--ssl-protocol=any,--ignore-ssl-errors=true"));
         optionsChrome.setAcceptInsecureCerts(true);
